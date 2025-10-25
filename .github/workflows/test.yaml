@@ -1,0 +1,20 @@
+name: Run Chatbot Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install g++
+      run: sudo apt-get install -y g++
+
+    - name: Build project
+      run: g++ -o chatbot Agent.cpp tests_chatbot.cpp
+
+    - name: Run tests
+      run: ./chatbot

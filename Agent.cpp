@@ -3,10 +3,10 @@
 #include<string>
 using namespace std;
 
-void compare_responses(string user_greet,string response, bool& res,string user_input){
+bool compare_responses(string user_greet,string response,string user_input){
     cout<<" user greet in comapre: "<<user_greet<<endl;
 
-   
+   bool res=false;
     if(user_greet==user_input){
         cout<<"displaying response"<<endl;
         cout<<response<<endl;
@@ -15,7 +15,7 @@ void compare_responses(string user_greet,string response, bool& res,string user_
     else{
         res=false;
     }
-
+    return res;
 
 }
 
@@ -23,7 +23,7 @@ void compare_responses(string user_greet,string response, bool& res,string user_
 
 
 
-void string_parser(string line,bool& res,string user_input){
+string string_parser(string line,bool& res,string user_input){
     
     string User_greet;
     string Agent_Response;
@@ -53,12 +53,11 @@ cout<<"user: "<<User_greet<<endl;
 if(User_greet==""){
     User_greet="-1";
 }
-    compare_responses(User_greet,Agent_Response,res,user_input);
+   res= compare_responses(User_greet,Agent_Response,user_input);
+   return Agent_Response;
 }
 
-void DisplayHouses(string line){
 
-}
 
 bool isNumber(const string &s) {
     for (char c : s)
@@ -67,7 +66,7 @@ bool isNumber(const string &s) {
     return !s.empty();
 }
 
-void file_reader(string file,string user_input){
+string file_reader(string file,string user_input){
     ifstream out(file);
     if(out.is_open()){
         cout<<"file is opedne"<<endl;
@@ -75,12 +74,12 @@ void file_reader(string file,string user_input){
 
     string temp;
     bool response_initiated=false;
-
+    string response;
 
     if(file=="Utterances.txt")
     while(getline(out,temp)){
         cout<<"temp: "<<temp<<endl;
-        string_parser(temp,response_initiated,user_input);
+        response=string_parser(temp,response_initiated,user_input);
         if(response_initiated==true){
             cout<<"iam breaking"<<endl;
             break;
@@ -108,42 +107,44 @@ void file_reader(string file,string user_input){
                 temp[i]=':';
             }
          }
-         cout<<temp<<endl;
+         response=temp;
 
 
     }
-
+    return response;
 }
 
 
 
+void runChatbot() {
+    cout << "Welcome .... I am here to help you" << endl;
+    string usergreet;
+    cin >> usergreet;
+    file_reader("Utterances.txt", usergreet);
+    string ch;
+    cin >> ch;
+    if (ch == "A") {
+        file_reader("Utterances.txt", ch);
+        string ch1;
+        cin >> ch1;
+        if (ch1 == "H") {
+            file_reader("Utterances.txt", ch1);
+            string ch;
+            cin >> ch;
+            file_reader("Home.txt", ch);
+        }
+    }
+    if (ch == "X") {
+        cout << "Thanks for coming" << endl;
+    }
+}
 
 
+#ifndef UNIT_TEST
 int main(){
     
-    cout<<"WElcome ....I am here to help you"<<endl;
-    string usergreet;
-    cin>>usergreet;
-    file_reader("Utterances.txt",usergreet);
-    string ch;
-    cin>>ch;
-    if(ch=="A"){
-        file_reader("Utterances.txt",ch);
-        string ch1;
-    cin>>ch1;
-     if(ch1=="H"){
-        
-        file_reader("Utterances.txt",ch1);
-        string ch;
-        cin>>ch;
-        file_reader("Home.txt",ch);
-        
-     }
-
-    }
-    if(ch=="X"){
-        cout<<"Thanks for coming"<<endl;
-    }
-
+runChatbot();
+return 0;
 
 }
+#endif
