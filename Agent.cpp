@@ -3,9 +3,12 @@
 #include<string>
 using namespace std;
 
-void compare_responses(string user_greet,string response, bool& res){
+void compare_responses(string user_greet,string response, bool& res,string user_input){
+    cout<<" user greet in comapre: "<<user_greet<<endl;
 
-    if(user_greet==user_greet){
+   
+    if(user_greet==user_input){
+        cout<<"displaying response"<<endl;
         cout<<response<<endl;
         res=true;
     }
@@ -20,45 +23,127 @@ void compare_responses(string user_greet,string response, bool& res){
 
 
 
-void string_parser(string line,bool& res){
+void string_parser(string line,bool& res,string user_input){
     
     string User_greet;
     string Agent_Response;
     bool in_response=false;
+    cout<<"inline: "<<line<<endl;
+    for(int i=0;line[i]!='\0';i++){
 
-    for(int i=0;i<line.length();i++){
-        if(line[i]!='#'||line[i]!='*' && in_response==false){
-            User_greet[i]+=line[i];
-        }
-        if(line[i]=='#'||line[i]=='*'){
-            in_response=true;
-        }
-        if(in_response==true){
-            Agent_Response[i]+=line[i];
-        }
+    if(in_response!=true){
+        cout<<" line {i}: "<<line[i]<<endl;
+            if(line[i]!='#'&&line[i]!='*'){
+            User_greet.push_back(line[i]);
+            }
+            else{
+                in_response=true;
+         }
     }
+    else{
+             if(line[i]!='#'&&line[i]!='*')
+            Agent_Response.push_back(line[i]);
+        
+    }
+    
+}
+cout<<"user: "<<User_greet<<endl;
+    cout<<"agent: "<<Agent_Response<<endl;
 
-   
-    compare_responses(User_greet,Agent_Response,res);
+if(User_greet==""){
+    User_greet="-1";
+}
+    compare_responses(User_greet,Agent_Response,res,user_input);
 }
 
+void DisplayHouses(string line){
 
-string file_reader(string file){
+}
+
+bool isNumber(const string &s) {
+    for (char c : s)
+        if (!isdigit(c))
+            return false;
+    return !s.empty();
+}
+
+void file_reader(string file,string user_input){
     ifstream out(file);
+    if(out.is_open()){
+        cout<<"file is opedne"<<endl;
+    }
 
     string temp;
     bool response_initiated=false;
+
+
+    if(file=="Utterances.txt")
     while(getline(out,temp)){
-        string_parser(temp,response_initiated);
+        cout<<"temp: "<<temp<<endl;
+        string_parser(temp,response_initiated,user_input);
         if(response_initiated==true){
+            cout<<"iam breaking"<<endl;
             break;
         }
     }
+    else{
+        int count= 0;
+         getline(out,temp);
+         for(int i=0;temp[i]!='\0';i++){
+            if(temp[i]=='#'){
+                temp[i]=':';
+            }
+         }
+         cout<<temp<<endl;
+         if (isNumber(user_input)) {
+    while (count < stoi(user_input) - 1) {
+        getline(out, temp);
+        count++;
+    }
+}
+
+         getline(out,temp);
+         for(int i=0;temp[i]!='\0';i++){
+            if(temp[i]=='#'){
+                temp[i]=':';
+            }
+         }
+         cout<<temp<<endl;
+
+
+    }
 
 }
+
+
 
 
 
 int main(){
-    cout<<"Hello WOrld"<<endl;
+    
+    cout<<"WElcome ....I am here to help you"<<endl;
+    string usergreet;
+    cin>>usergreet;
+    file_reader("Utterances.txt",usergreet);
+    string ch;
+    cin>>ch;
+    if(ch=="A"){
+        file_reader("Utterances.txt",ch);
+        string ch1;
+    cin>>ch1;
+     if(ch1=="H"){
+        
+        file_reader("Utterances.txt",ch1);
+        string ch;
+        cin>>ch;
+        file_reader("Home.txt",ch);
+        
+     }
+
+    }
+    if(ch=="X"){
+        cout<<"Thanks for coming"<<endl;
+    }
+
+
 }
