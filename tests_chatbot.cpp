@@ -3,8 +3,7 @@
 
 #include <cassert>
 #include <iostream>
-#include "Agent.cpp"
-
+#include "Agent.h"
 using namespace std;
 
 void test_isNumber() {
