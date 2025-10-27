@@ -10,7 +10,7 @@ bool compare_responses(string user_greet,string response,string user_input){
     cout<<" user greet in comapre: "<<user_greet<<endl;
 
    bool res=false;
-    if(user_greet==user_input){
+    if(user_greet==user_input || user_greet=="-1"){
         cout<<"displaying response"<<endl;
         cout<<response<<endl;
         res=true;
@@ -19,7 +19,6 @@ bool compare_responses(string user_greet,string response,string user_input){
         res=false;
     }
     return res;
-
 }
 
 
