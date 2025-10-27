@@ -72,6 +72,53 @@ bool isNumber(const string &s) {
     return true;
 }
 
+string Home_file_reader(string file,string user_input){
+
+    ifstream out(file);
+    if(out.is_open()){
+        cout<<"file is opened"<<endl;
+    }
+
+    string temp;
+
+int count = 0;
+    string header;
+    getline(out, header); 
+    // skip the first line (column names)
+    string formattedResponse = "";
+
+    if (isNumber(user_input)) {
+        while (count < stoi(user_input)) {
+            getline(out, temp);
+            count++;
+        }
+    }
+
+    string field = "";
+    int col = 0;
+    for (int i = 0; i < temp.size(); i++) {
+        if (temp[i] == '#') {
+            switch (col) {
+                case 0: formattedResponse += "Area  " + field + "\n";
+                 break;
+                case 1: formattedResponse += "Size  " + field + "\n";
+                 break;
+                case 2: formattedResponse += "Installments  " + field + "\n";
+                 break;
+                case 3: formattedResponse += "Price  " + field + "\n";
+                 break;
+            }
+            field = "";
+            col++;
+        } else {
+            field.push_back(temp[i]);
+        }
+    }
+    formattedResponse += "Down Payment  " + field + "\n";
+
+    return formattedResponse; 
+    
+}
 
 
 string file_reader(string file, string user_input){
@@ -114,43 +161,9 @@ string file_reader(string file, string user_input){
         return response;
     }
    else {
-    int count = 0;
-    string header;
-    getline(out, header); 
-    // skip the first line (column names)
-    string formattedResponse = "";
-
-    if (isNumber(user_input)) {
-        while (count < stoi(user_input)) {
-            getline(out, temp);
-            count++;
-        }
-    }
-
-    string field = "";
-    int col = 0;
-    for (int i = 0; i < temp.size(); i++) {
-        if (temp[i] == '#') {
-            switch (col) {
-                case 0: formattedResponse += "Area  " + field + "\n";
-                 break;
-                case 1: formattedResponse += "Size  " + field + "\n";
-                 break;
-                case 2: formattedResponse += "Installments  " + field + "\n";
-                 break;
-                case 3: formattedResponse += "Price  " + field + "\n";
-                 break;
-            }
-            field = "";
-            col++;
-        } else {
-            field.push_back(temp[i]);
-        }
-    }
-    formattedResponse += "Down Payment  " + field + "\n";
-
-    cout << formattedResponse; /// printing here and also run it it will be need in the test or git action for automation testing 
-    return formattedResponse; 
+    string formatted_response=Home_file_reader(file,user_input);
+       cout<<"formatted_resppnse: "<<endl;
+        return formatted_response;
 }
 
 
