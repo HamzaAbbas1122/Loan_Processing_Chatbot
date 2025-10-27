@@ -6,8 +6,8 @@
 #include<string>
 using namespace std;
 
-bool compare_responses(string user_greet,string response,string user_input){
-    cout<<" user greet in comapre: "<<user_greet<<endl;
+bool compare_responses(string user_greet, string response, string user_input){
+    cout<<" User greets in compare: "<<user_greet<<endl;
 
    bool res=false;
     if(user_greet==user_input || user_greet=="-1"){
@@ -62,85 +62,127 @@ if(User_greet==""){
 
 
 bool isNumber(const string &s) {
-    for (char c : s)
-        if (!isdigit(c))
+    if (s.empty()) return false; 
+
+    for (int i = 0; i < s.length(); i++) {
+        if (!isdigit(s[i])) {
             return false;
-    return !s.empty();
+        }
+    }
+    return true;
 }
 
-string file_reader(string file,string user_input){
+
+
+string file_reader(string file, string user_input){
     ifstream out(file);
     if(out.is_open()){
-        cout<<"file is opedne"<<endl;
+        cout<<"file is opened"<<endl;
     }
 
     string temp;
     bool response_initiated=false;
     string response;
+    string default_response = ""; // store * line separately
 
-    if(file=="Utterances.txt")
-    while(getline(out,temp)){
-        cout<<"temp: "<<temp<<endl;
-        response=string_parser(temp,response_initiated,user_input);
-        if(response_initiated==true){
-            cout<<"iam breaking"<<endl;
-            break;
+    if(file=="Utterances.txt"){
+        while(getline(out,temp)){
+            cout<<"temp: "<<temp<<endl;
+            bool temp_res = false;
+            string parsed = string_parser(temp,temp_res,user_input);
+
+            // if this line is * line then  store this lin for later use
+            // this function is chnage to pass over the * if it occured first before it find the user greet
+        
+            if (temp.size() > 0 && temp[0] == '*') {
+                default_response = parsed;
+                continue; 
+                // skip using it now to check the next 
+            }
+
+            if(temp_res==true){
+                cout<<"i am breaking "<<endl;
+                response_initiated = true;
+                break;
+            }
+        }
+
+        // here i implement the logic  if no exact match was found print the * line
+        if(!response_initiated && default_response != ""){
+            cout<<default_response<<endl;
+        }
+        return response;
+    }
+   else {
+    int count = 0;
+    string header;
+    getline(out, header); 
+    // skip the first line (column names)
+    string formattedResponse = "";
+
+    if (isNumber(user_input)) {
+        while (count < stoi(user_input)) {
+            getline(out, temp);
+            count++;
         }
     }
-    else{
-        int count= 0;
-         getline(out,temp);
-         for(int i=0;temp[i]!='\0';i++){
-            if(temp[i]=='#'){
-                temp[i]=':';
+
+    string field = "";
+    int col = 0;
+    for (int i = 0; i < temp.size(); i++) {
+        if (temp[i] == '#') {
+            switch (col) {
+                case 0: formattedResponse += "Area  " + field + "\n";
+                 break;
+                case 1: formattedResponse += "Size  " + field + "\n";
+                 break;
+                case 2: formattedResponse += "Installments  " + field + "\n";
+                 break;
+                case 3: formattedResponse += "Price  " + field + "\n";
+                 break;
             }
-         }
-         cout<<temp<<endl;
-         if (isNumber(user_input)) {
-    while (count < stoi(user_input) - 1) {
-        getline(out, temp);
-        count++;
+            field = "";
+            col++;
+        } else {
+            field.push_back(temp[i]);
+        }
     }
+    formattedResponse += "Down Payment  " + field + "\n";
+
+    cout << formattedResponse; /// printing here and also run it it will be need in the test or git action for automation testing 
+    return formattedResponse; 
 }
 
-         getline(out,temp);
-         for(int i=0;temp[i]!='\0';i++){
-            if(temp[i]=='#'){
-                temp[i]=':';
-            }
-         }
-         response=temp;
 
-
-    }
-    return response;
 }
-
 
 
 void runChatbot() {
-    cout << "Welcome .... I am here to help you" << endl;
-    string usergreet;
-    cin >> usergreet;
-    file_reader("Utterances.txt", usergreet);
-    string ch;
-    cin >> ch;
-    if (ch == "A") {
-        file_reader("Utterances.txt", ch);
-        string ch1;
-        cin >> ch1;
-        if (ch1 == "H") {
-            file_reader("Utterances.txt", ch1);
-            string ch;
-            cin >> ch;
-            file_reader("Home.txt", ch);
+     cout << "Welcome .... I am here to help you" << endl;
+      string userInput;
+
+      string last_input = "";
+
+
+    while (true) {
+
+        getline(cin, userInput);
+
+        if (userInput == "X") {
+
+            cout << "Thanks for coming" << endl;
+
+            break;
         }
-    }
-    if (ch == "X") {
-        cout << "Thanks for coming" << endl;
+
+        if (last_input == "H" && isNumber(userInput)) {
+             file_reader("Home.txt", userInput);
+        } else {
+             file_reader("Utterances.txt", userInput);
+        }
+        last_input = userInput;
     }
 }
-
 
 #ifndef UNIT_TEST
 int main(){
