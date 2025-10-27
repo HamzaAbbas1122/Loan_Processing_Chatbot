@@ -10,4 +10,5 @@ string string_parser(string line, bool &res, string user_input);
 string file_reader(string file, string user_input);
 bool isNumber(const string &s);
 void runChatbot();
+string Home_file_reader(string file,string user_input);
 #endif
