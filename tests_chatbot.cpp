@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <iostream>
+#include<fstream>
 #include "Agent.h"
 using namespace std;
 
