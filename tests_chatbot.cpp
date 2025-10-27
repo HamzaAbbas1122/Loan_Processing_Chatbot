@@ -30,7 +30,7 @@ void test_home_display() {
 
 
     assert(response.find("Area  A2") != string::npos);
-    assert(response.find("Price 8000000") != string::npos);
+    assert(response.find("Price  8000000") != string::npos);
     cout << "✅ test_home_display passed\n";
 }
 
