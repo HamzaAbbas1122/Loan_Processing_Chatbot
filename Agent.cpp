@@ -122,17 +122,18 @@ int count = 0;
 
 
 string file_reader(string file, string user_input){
-    ifstream out(file);
-    if(out.is_open()){
-        cout<<"file is opened"<<endl;
-    }
-
+ 
     string temp;
     bool response_initiated=false;
     string response;
     string default_response = ""; // store * line separately
 
     if(file=="Utterances.txt"){
+           ifstream out(file);
+    if(out.is_open()){
+        cout<<"file is opened"<<endl;
+    }
+
         while(getline(out,temp)){
             cout<<"temp: "<<temp<<endl;
             bool temp_res = false;
@@ -162,7 +163,7 @@ string file_reader(string file, string user_input){
     }
    else {
     string formatted_response=Home_file_reader(file,user_input);
-       cout<<"formatted_resppnse: "<<endl;
+       cout<<"formatted_resppnse: "<<formatted_response<<endl;
         return formatted_response;
 }
 
