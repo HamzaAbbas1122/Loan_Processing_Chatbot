@@ -6,203 +6,165 @@
 #include<string>
 using namespace std;
 
-bool compare_responses(string user_greet, string response, string user_input){
-    cout<<" User greets in compare: "<<user_greet<<endl;
-
-   bool res=false;
-    if(user_greet==user_input){
-        cout<<"displaying response"<<endl;
-        cout<<response<<endl;
-        res=true;
-    }
-    else{
-        res=false;
+bool compare_responses(string user_greet, string response, string user_input) {
+    bool res = false;
+    if (user_greet == user_input) {
+        cout << response << endl;
+        res = true;
     }
     return res;
 }
 
 
-
-
-
-string string_parser(string line,bool& res,string user_input){
-    
+string string_parser(string line, bool& res, string user_input) {
     string User_greet;
     string Agent_Response;
-    bool in_response=false;
-    cout<<"inline: "<<line<<endl;
-    for(int i=0;line[i]!='\0';i++){
+    bool in_response = false;
 
-    if(in_response!=true){
-        cout<<" line {i}: "<<line[i]<<endl;
-            if(line[i]!='#'&&line[i]!='*'){
-            User_greet.push_back(line[i]);
-            }
-            else{
-                in_response=true;
-         }
+    for (int i = 0; line[i] != '\0'; i++) {
+        if (!in_response) {
+            if (line[i] != '#' && line[i] != '*')
+                User_greet.push_back(line[i]);
+            else
+                in_response = true;
+        }
+        else {
+            if (line[i] != '#' && line[i] != '*')
+                Agent_Response.push_back(line[i]);
+        }
     }
-    else{
-             if(line[i]!='#'&&line[i]!='*')
-            Agent_Response.push_back(line[i]);
-        
+
+    if (User_greet.empty()) {
+        User_greet = "-1";
     }
-    
+    res = compare_responses(User_greet, Agent_Response, user_input);
+    return Agent_Response;
 }
-cout<<"user: "<<User_greet<<endl;
-    cout<<"agent: "<<Agent_Response<<endl;
-
-if(User_greet==""){
-    User_greet="-1";
-}
-   res= compare_responses(User_greet,Agent_Response,user_input);
-   return Agent_Response;
-}
-
 
 
 bool isNumber(const string &s) {
     if (s.empty()) return false; 
 
     for (int i = 0; i < s.length(); i++) {
-        if (!isdigit(s[i])) {
-            return false;
-        }
+        if (!isdigit(s[i])) return false;
     }
     return true;
 }
 
-string Home_file_reader(string file,string user_input){
-
+string Home_file_reader(string file, string user_input) {
     ifstream out(file);
-    if(out.is_open()){
-        cout<<"file is opened"<<endl;
+    if (!out.is_open()) {
+        return "Error: Could not open Home file.\n";
     }
 
     string temp;
-
-int count = 0;
     string header;
-    getline(out, header); 
-    // skip the first line (column names)
+    getline(out, header); // skip header
     string formattedResponse = "";
 
     if (isNumber(user_input)) {
-        while (count < stoi(user_input)) {
-            getline(out, temp);
+        int count = 0;
+        while (count < stoi(user_input) && getline(out, temp)) {
             count++;
         }
     }
+
+    if (temp.empty()) return "Invalid area selection.\n";
 
     string field = "";
     int col = 0;
     for (int i = 0; i < temp.size(); i++) {
         if (temp[i] == '#') {
             switch (col) {
-                case 0: formattedResponse += "Area  " + field + "\n";
-                 break;
-                case 1: formattedResponse += "Size  " + field + "\n";
-                 break;
-                case 2: formattedResponse += "Installments  " + field + "\n";
-                 break;
-                case 3: formattedResponse += "Price  " + field + "\n";
-                 break;
+            case 0: formattedResponse += "Area  " + field + "\n"; break;
+            case 1: formattedResponse += "Size  " + field + "\n"; break;
+            case 2: formattedResponse += "Installments  " + field + "\n"; break;
+            case 3: formattedResponse += "Price  " + field + "\n"; break;
             }
-            field = "";
+            field.clear();
             col++;
-        } else {
+        }
+        else {
             field.push_back(temp[i]);
         }
     }
     formattedResponse += "Down Payment  " + field + "\n";
-
-    return formattedResponse; 
-    
+    return formattedResponse;
 }
 
 
-string file_reader(string file, string user_input){
- 
+string file_reader(string file, string user_input) {
     string temp;
-    bool response_initiated=false;
-    string response;
+    bool response_initiated = false;
     string default_response = ""; // store * line separately
 
-    if(file=="Utterances.txt"){
-           ifstream out(file);
-    if(out.is_open()){
-        cout<<"file is opened"<<endl;
-    }
+    if (file == "Utterances.txt") {
+        ifstream out(file);
+        if (!out.is_open()) {
+            return "Error: Could not open Utterances file.\n";
+        }
 
-        while(getline(out,temp)){
-            cout<<"temp: "<<temp<<endl;
+        while (getline(out, temp)) {
             bool temp_res = false;
-            string parsed = string_parser(temp,temp_res,user_input);
+            string parsed = string_parser(temp, temp_res, user_input);
 
-            // if this line is * line then  store this lin for later use
-            // this function is chnage to pass over the * if it occured first before it find the user greet
-        
-            if (temp.size() > 0 && temp[0] == '*') {
+            // if this line is * line then  store this line for later use
+            // this function is change to pass over the * if it occured first before it find the user greet
+            if (!temp.empty() && temp[0] == '*') {
                 default_response = parsed;
-                continue; 
+                continue;   
                 // skip using it now to check the next 
             }
 
-            if(temp_res==true){
-                cout<<"i am breaking "<<endl;
+            if (temp_res) {
                 response_initiated = true;
                 break;
             }
         }
-
         // here i implement the logic  if no exact match was found print the * line
-        if(!response_initiated && default_response != ""){
-            cout<<default_response<<endl;
+        if (!response_initiated && !default_response.empty()) {
+            cout << default_response << endl;
         }
-        return response;
+        return "";
     }
-   else {
-    string formatted_response=Home_file_reader(file,user_input);
-       cout<<"formatted_resppnse: "<<formatted_response<<endl;
+    else {
+        string formatted_response = Home_file_reader(file, user_input);
+        cout << formatted_response;
         return formatted_response;
+    }
 }
-
-
-}
-
 
 void runChatbot() {
-     cout << "Welcome .... I am here to help you" << endl;
-      string userInput;
-
-      string last_input = "";
 
 
-    while (true) {
+    
+    cout << "Welcome .... I am here to help you" << endl;
+    string userInput;
+    string last_input = "";
 
+   while(true){
         getline(cin, userInput);
 
         if (userInput == "X") {
-
             cout << "Thanks for coming" << endl;
-
             break;
         }
 
         if (last_input == "H" && isNumber(userInput)) {
-             file_reader("Home.txt", userInput);
-        } else {
-             file_reader("Utterances.txt", userInput);
+            file_reader("Home.txt", userInput);
+
         }
+        else {
+            file_reader("Utterances.txt", userInput);
+        }
+
         last_input = userInput;
     }
 }
 
 #ifndef UNIT_TEST
-int main(){
-    
-runChatbot();
-return 0;
-
+int main() {
+    runChatbot();
+    return 0;
 }
 #endif
