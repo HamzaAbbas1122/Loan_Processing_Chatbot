@@ -1,4 +1,29 @@
-.Agent.exe
-.test_app
-.tempCodeRunnerFile.cpp
-.vscode
+# Compiled executables
+Agent.exe
+*.exe
+*.dll
+*.obj
+*.pdb
+*.lib
+
+# Build directories
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+
+# VS Code
+.vscode/
+
+# Temporary / test files
+.test_app/
+tempCodeRunnerFile.cpp
+*.tmp
+*.log
+
+# IDE / Editor
+.idea/
+*.suo
+*.user
