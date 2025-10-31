@@ -6,9 +6,14 @@
 #include<string>
 using namespace std;
 
+string to_lower(string s) {
+    for (char &c : s) c = tolower(c);
+    return s;
+}
+
 bool compare_responses(string user_greet, string response, string user_input) {
     bool res = false;
-    if (user_greet == user_input) {
+    if (to_lower(user_greet) == to_lower(user_input)) {
         cout << response << endl;
         res = true;
     }
@@ -135,24 +140,21 @@ string file_reader(string file, string user_input) {
 }
 
 void runChatbot() {
-
-
-    
     cout << "Welcome .... I am here to help you" << endl;
     string userInput;
     string last_input = "";
 
-   while(true){
+    while (true) {
         getline(cin, userInput);
+        string lower_input = to_lower(userInput);
 
-        if (userInput == "X") {
+        if (lower_input == "x") {
             cout << "Thanks for coming" << endl;
             break;
         }
 
-        if (last_input == "H" && isNumber(userInput)) {
+        if (to_lower(last_input) == "h" && isNumber(userInput)) {
             file_reader("Home.txt", userInput);
-
         }
         else {
             file_reader("Utterances.txt", userInput);
