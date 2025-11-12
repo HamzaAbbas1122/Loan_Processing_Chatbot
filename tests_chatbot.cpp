@@ -12,7 +12,7 @@ void test_general_case(){
     string response = string_parser("*#How can i help you dear?!", res,"Assalam-o-Alaikum");
     assert(res == false);
     assert(response == "How can i help you dear?!");
-    cout << "✅ General -> test_string_parser passed\n";
+    cout << " General -> test_string_parser passed\n";
     
 }
 
@@ -25,13 +25,13 @@ void test_home_display() {
     out << "A2#10 Marla#36#8000000#800000\n";
     out.close();
 
-    string response = Home_file_reader("Home.txt", "2");
+    string response = Home_file_reader("Home.txt", "",true);
     cout << "Output:\n" << response << endl;
 
 
-    assert(response.find("Area  A2") != string::npos);
-    assert(response.find("Price  8000000") != string::npos);
-    cout << "✅ test_home_display passed\n";
+    assert(response.find("Area: A2") != string::npos);
+    assert(response.find("Price: 8000000") != string::npos);
+    cout << " test_home_display passed\n";
 }
 
 
@@ -39,7 +39,7 @@ void test_isNumber() {
     assert(isNumber("123"));
     assert(!isNumber("12a"));
     assert(!isNumber(""));
-    cout << "✅ test_isNumber passed\n";
+    cout << " test_isNumber passed\n";
 }
 
 void test_string_parser() {
@@ -47,7 +47,7 @@ void test_string_parser() {
     string response = string_parser("Hi#Hello there!", res,"Hi");
     assert(res == true);
     assert(response == "Hello there!");
-    cout << "✅ test_string_parser passed\n";
+    cout << " test_string_parser passed\n";
 }
 
 void test_compare_responses() {
@@ -55,7 +55,7 @@ void test_compare_responses() {
     assert(result == true);
     result = compare_responses("Hi", "Hello there!", "Bye");
     assert(result == false);
-    cout << "✅ test_compare_responses passed\n";
+    cout << " test_compare_responses passed\n";
 }
 
 int main() {
@@ -64,6 +64,6 @@ int main() {
     test_compare_responses();
     test_general_case();
     test_home_display();
-    cout << "🎉 All tests passed successfully!" << endl;
+    cout << " All tests passed successfully!" << endl;
     return 0;
 }
