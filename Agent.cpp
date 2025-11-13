@@ -203,12 +203,106 @@ string file_reader(string file, string user_input, bool show_all = false) {
 }
 
 // main chatbot loop
+// void runChatbot() {
+//     cout << "Welcome .... I am here to help you" << endl;
+//     string userInput;
+//     string last_input = "";
+
+//     while (true) {
+//         getline(cin, userInput);
+//         string lower_input = to_lower(userInput);
+
+//         if (lower_input == "x") {
+//             cout << "Thanks for coming" << endl;
+//             break;
+//         }
+
+//         if (to_lower(last_input) == "h" && isNumber(userInput)) {
+//             file_reader("Home.txt", userInput,false); // show full details
+//         } else if (lower_input == "h") {
+//             file_reader("Utterances.txt", lower_input, false);
+//             file_reader("Home.txt", "", true); // show all options without down payment
+//         } else {
+//             file_reader("Utterances.txt", userInput,false);
+//         }
+        
+
+//         last_input = userInput;
+//     }
+//}
+
 void runChatbot() {
     cout << "Welcome .... I am here to help you" << endl;
-    string userInput;
-    string last_input = "";
 
+    string userInput;
+    bool greeted = false;       // user greeted?
+    bool applied = false;       // user pressed A?
+    bool homeLoanMode = false;  // user pressed H?
+
+    // Wait for Greeting
+    while (!greeted) {
+        cout << "\nPlease greet me (Hi, Hello, Salam, AoA) or press X to exit: ";
+        getline(cin, userInput);
+        string lower_input = to_lower(userInput);
+
+        if (lower_input == "x") {
+            cout << "Thanks for coming" << endl;
+            return;
+        }
+
+        else {
+            file_reader("Utterances.txt", userInput, false);
+            greeted = true;
+        } 
+    }
+
+    // Wait for 'A' (apply for loan)
+    while (!applied) {
+        cout << "\nPlease press A to apply for a loan or X to exit: ";
+        getline(cin, userInput);
+        string lower_input = to_lower(userInput);
+
+        if (lower_input == "x") {
+            cout << "Thanks for coming" << endl;
+            return;
+        }
+
+        if (lower_input == "a") {
+            file_reader("Utterances.txt", userInput, false);
+            applied = true;
+        } else {
+            cout << " Invalid input!\n";
+        }
+    }
+
+    // Wait for loan category
+    while (!homeLoanMode) {
+        cout << "\nPlease select the loan category:\n"
+             << "H - Home Loan\nC - Car Loan\nS - Scooter Loan\nP - Personal Loan\nX - Exit\n> ";
+        getline(cin, userInput);
+        string lower_input = to_lower(userInput);
+
+        if (lower_input == "x") {
+            cout << "Thanks for coming" << endl;
+            return;
+        }
+
+        if (lower_input == "h" || lower_input == "c" || lower_input == "s" || lower_input == "p") {
+            file_reader("Utterances.txt", lower_input, false);
+            if (lower_input == "h") {
+                homeLoanMode = true;
+                file_reader("Home.txt", "", true);  // show all home options
+            } else {
+                cout << "Currently, only Home Loan details are available.\n";
+            }
+        } else {
+            cout << "  Invalid input! Please select H, C, S, or P.\n";
+        }
+    }
+
+    // Wait for valid area number
     while (true) {
+        cout << "\nEnter the area number you want to view (1, 2, 3, ...) or X to exit: ";
         getline(cin, userInput);
         string lower_input = to_lower(userInput);
 
@@ -217,18 +311,14 @@ void runChatbot() {
             break;
         }
 
-        if (to_lower(last_input) == "h" && isNumber(userInput)) {
-            file_reader("Home.txt", userInput,false); // show full details
-        } else if (lower_input == "h") {
-            file_reader("Utterances.txt", lower_input, false);
-            file_reader("Home.txt", "", true); // show all options without down payment
+        if (isNumber(userInput)) {
+            file_reader("Home.txt", userInput, false); // show selected option
         } else {
-            file_reader("Utterances.txt", userInput,false);
+            cout << "Invalid input! Please enter a valid area number.\n";
         }
-
-        last_input = userInput;
     }
 }
+
 
 #ifndef UNIT_TEST
 int main() {
