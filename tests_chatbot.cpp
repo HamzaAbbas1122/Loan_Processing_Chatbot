@@ -1,4 +1,3 @@
-#define UNIT_TEST
 #include <cassert>
 #include <iostream>
 #include <fstream>
@@ -280,7 +279,39 @@ void test_save_and_read_application() {
     app.loanCategory = "Home";
     app.status = "Submitted";
     app.fullName = "Test User";
+    app.fatherName = "Father Name";
+    app.postalAddress = "Test Address";
+    app.contactNumber = "03001234567";
+    app.emailAddress = "test@email.com";
     app.cnicNumber = "1234567890123";
+    app.cnicExpiryDate = "01-01-2030";
+    app.employmentStatus = "Salaried";
+    app.maritalStatus = "Single";
+    app.gender = "Male";
+    app.numDependents = "0";
+    app.annualIncome = "500000";
+    app.monthlyAvgElectricityBill = "5000";
+    app.currentElectricityBill = "5500";
+    app.loanActive = "N/A";
+    app.totalLoanAmount = "0";
+    app.amountReturned = "0";
+    app.loanDue = "0";
+    app.bankName = "N/A";
+    app.existingLoanCategory = "N/A";
+    app.ref1Name = "Reference One";
+    app.ref1Cnic = "1111111111111";
+    app.ref1CnicIssueDate = "01-01-2020";
+    app.ref1Phone = "03111111111";
+    app.ref1Email = "ref1@email.com";
+    app.ref2Name = "Reference Two";
+    app.ref2Cnic = "2222222222222";
+    app.ref2CnicIssueDate = "01-01-2020";
+    app.ref2Phone = "03222222222";
+    app.ref2Email = "ref2@email.com";
+    app.cnicFrontPath = "./data/0001/CNIC_Front.jpg";
+    app.cnicBackPath = "./data/0001/CNIC_Back.jpg";
+    app.electricityBillPath = "./data/0001/Electricity_Bill.jpg";
+    app.salarySlipPath = "./data/0001/Salary_Slip.jpg";
     
     save_application_to_file(app);
     
@@ -298,6 +329,9 @@ void test_save_and_read_application() {
     assert(readApp.applicationId == "0001");
     assert(readApp.loanCategory == "Home");
     assert(readApp.fullName == "Test User");
+    assert(readApp.cnicNumber == "1234567890123");
+    assert(readApp.employmentStatus == "Salaried");
+    assert(readApp.ref1Name == "Reference One");
     
     cout << "✓ test_save_and_read_application passed\n";
 }
