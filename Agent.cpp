@@ -81,6 +81,20 @@ double calculate_iou(const string &s1, const string &s2)
     return (double)intersection.size() / union_set.size();
 }
 
+// Default constructor for LoanApplication
+LoanApplication::LoanApplication()
+    : applicationId(""), loanCategory(""), status(""),
+      fullName(""), fatherName(""), postalAddress(""), contactNumber(""),
+      emailAddress(""), cnicNumber(""), cnicExpiryDate(""), employmentStatus(""),
+      maritalStatus(""), gender(""), numDependents(""), annualIncome(""),
+      monthlyAvgElectricityBill(""), currentElectricityBill(""), loanActive(""),
+      totalLoanAmount(""), amountReturned(""), loanDue(""), bankName(""),
+      existingLoanCategory(""), ref1Name(""), ref1Cnic(""), ref1CnicIssueDate(""),
+      ref1Phone(""), ref1Email(""), ref2Name(""), ref2Cnic(""), ref2CnicIssueDate(""),
+      ref2Phone(""), ref2Email(""), cnicFrontPath(""), cnicBackPath(""),
+      electricityBillPath(""), salarySlipPath("") {
+    // Constructor body (can be empty)
+}
 // General Conversation Mode Response Generator
 string IoU_response(const string &user_input, const string &corpusFile)
 {
