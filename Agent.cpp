@@ -83,16 +83,16 @@ double calculate_iou(const string &s1, const string &s2)
 
 // Default constructor for LoanApplication
 LoanApplication::LoanApplication()
-    : applicationId(""), loanCategory(""), status(""),
-      fullName(""), fatherName(""), postalAddress(""), contactNumber(""),
-      emailAddress(""), cnicNumber(""), cnicExpiryDate(""), employmentStatus(""),
-      maritalStatus(""), gender(""), numDependents(""), annualIncome(""),
-      monthlyAvgElectricityBill(""), currentElectricityBill(""), loanActive(""),
-      totalLoanAmount(""), amountReturned(""), loanDue(""), bankName(""),
-      existingLoanCategory(""), ref1Name(""), ref1Cnic(""), ref1CnicIssueDate(""),
-      ref1Phone(""), ref1Email(""), ref2Name(""), ref2Cnic(""), ref2CnicIssueDate(""),
-      ref2Phone(""), ref2Email(""), cnicFrontPath(""), cnicBackPath(""),
-      electricityBillPath(""), salarySlipPath("") {
+    : applicationId("0"), loanCategory("N/A"), status("N/A"),
+      fullName("N/A"), fatherName("N/A"), postalAddress("N/A"), contactNumber("000"),
+      emailAddress("N/A"), cnicNumber("0000000000000"), cnicExpiryDate("00-00-0000"), employmentStatus("N/A"),
+      maritalStatus("N/A"), gender("N/A"), numDependents("0"), annualIncome("0"),
+      monthlyAvgElectricityBill("0"), currentElectricityBill("0"), loanActive("N/A"),
+      totalLoanAmount("0"), amountReturned("0"), loanDue("0"), bankName("N/A"),
+      existingLoanCategory("N/A"), ref1Name("N/A"), ref1Cnic("0000000000000"), ref1CnicIssueDate("00-00-0000"),
+      ref1Phone("00"), ref1Email("N/A"), ref2Name("N/A"), ref2Cnic("0000000000000"), ref2CnicIssueDate("00-00-0000"),
+      ref2Phone("00"), ref2Email("N/A"), cnicFrontPath("N/A"), cnicBackPath("N/A"),
+      electricityBillPath("N/A"), salarySlipPath("N/A") {
     // Constructor body (can be empty)
 }
 // General Conversation Mode Response Generator

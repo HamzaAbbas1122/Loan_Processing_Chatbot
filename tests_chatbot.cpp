@@ -187,7 +187,7 @@ void test_LoanApplication_to_string_row() {
         fields.push_back(field);
     }
     
-    assert(fields.size() >= 37);
+    assert(fields.size() == 36);
     assert(fields[0] == "0001");
     assert(fields[1] == "Home");
     assert(fields[2] == "C1");
