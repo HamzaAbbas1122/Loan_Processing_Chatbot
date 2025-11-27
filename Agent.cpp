@@ -14,7 +14,7 @@
 using namespace std;
 
 // Define custom colors and marks for console output (Using Macros for compatibility)
-#define BOLD "\033[1m" // Added BOLD macro definition
+#define BOLD "\033[1m"
 #define BOLD_RED "\033[1;31m"
 #define BOLD_GREEN "\033[1;32m"
 #define BOLD_YELLOW "\033[1;33m"
@@ -236,20 +236,55 @@ vector<string> get_fields_by_line_number(const string &file, int lineNumber)
     return fields;
 }
 
+
 // --- Validation and ID Management ---
 
-bool is13DigitCnic(const string &s)
-{
-    if (s.length() != 13)
-        return false;
-    for (char const &c : s)
-    {
-        if (std::isdigit(c) == 0)
-            return false;
+// check for cnic if its 13 digits or not
+bool is13DigitCnic(const string &s) {
+    if (s.length() != 13) return false;
+    for (char c : s) {
+        if (!isdigit(c)) return false;
     }
     return true;
 }
 
+
+// string check
+bool isStringOnly(const string &s) {
+    if (s.empty()) return false;
+    for (char c : s) {
+        if (!(isalpha(c) || c == ' ')) return false;
+    }
+    return true;
+}
+
+// check if phone number is 11 digits or not
+bool isPhoneNumber(const string &s) {
+    if (s.length() != 11) return false;
+    for (char c : s) {
+        if (!isdigit(c)) return false;
+    }
+    return true;
+}
+
+// checks if email is valid or not
+bool isValidEmail(const string &email) {
+    const vector<string> allowedDomains = {
+        "@gmail.com",
+        "@outlook.com",
+        "@hotmail.com",
+        "@yahoo.com"
+    };
+
+    for (const string &dom : allowedDomains) {
+        if (email.size() > dom.size() &&
+            email.compare(email.size() - dom.size(), dom.size(), dom) == 0)
+            return true;
+    }
+    return false;
+}
+
+// check if date is valid or not
 bool is_valid_date(const string &date)
 {
     if (date.length() != 10)
@@ -264,7 +299,7 @@ bool is_valid_date(const string &date)
     if (!isNumber(d_str) || !isNumber(m_str) || !isNumber(y_str))
         return false;
 
-    // Basic date logic (DD-MM-YYYY)
+    //basic date logic (DD-MM-YYYY)
     int day = stoi(d_str);
     int month = stoi(m_str);
     int year = stoi(y_str);
@@ -272,9 +307,9 @@ bool is_valid_date(const string &date)
     if (day < 1 || day > 31 || month < 1 || month > 12)
         return false;
     if (year < 1900 || year > 2100)
-        return false; // Arbitrary year range
+        return false; // arbitrary year range
 
-    // More accurate day check (simplified, for robust check, proper library or logic is needed)
+    // day check
     if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
         return false;
     if (month == 2)
@@ -359,7 +394,7 @@ int get_max_id()
 // Generates a new unique ID by incrementing from the highest existing ID
 string generate_unique_id()
 {
-    // START FIX: Start search from max existing ID + 1
+    // Start search from max existing ID + 1
     int start_id = get_max_id() + 1;
 
     int id_counter = start_id;
@@ -374,7 +409,7 @@ string generate_unique_id()
             id = "0" + id;
         }
 
-        // Check uniqueness only if we jumped ahead (to be safe, although sequential guarantees it)
+        // Check uniqueness only if we jumped ahead 
         if (id_counter == start_id || is_unique_id(id))
         {
             return id;
@@ -1022,44 +1057,93 @@ string collect_personal_info(LoanApplication &app)
     cout << BOLD_CYAN << "\n[C1/C4] Personal Information" << RESET << endl;
     print_border(50, CYAN);
 
+    //full Name (validated(alphabets only))
+    while (true)
+    {
     cout << CYAN << "Full Name (" << (app.fullName.empty() ? "N/A" : app.fullName) << "): " << RESET;
     getline(cin, userInput);
+
+if (userInput.empty()){
+        cout << BOLD_YELLOW << "Field required." << RESET << endl;
+    }
     if (!userInput.empty())
         app.fullName = userInput;
+
+    if (!app.fullName.empty() && isStringOnly(app.fullName))
+        break;
+
+    cout << BOLD_RED << "Invalid name! Only alphabets allowed.\n" << RESET;
+    }
+
+   //father's name (validated)
+    while (true)
+    {
     cout << CYAN << "Father's Name (" << (app.fatherName.empty() ? "N/A" : app.fatherName) << "): " << RESET;
     getline(cin, userInput);
+
+    if (userInput.empty()){
+        cout << BOLD_YELLOW << "Field required." << RESET << endl;
+    }
     if (!userInput.empty())
         app.fatherName = userInput;
+
+    if (!app.fatherName.empty() && isStringOnly(app.fatherName))
+        break;
+
+    cout << BOLD_RED << "Invalid name! Only alphabets allowed.\n" << RESET;
+    }
+
 
     cout << CYAN << "Postal Address (" << (app.postalAddress.empty() ? "N/A" : app.postalAddress) << "): " << RESET;
     getline(cin, userInput);
     if (!userInput.empty())
         app.postalAddress = userInput;
 
-    // Contact Number (Validation)
+   // contact Number with 11 digit validation
     while (true)
     {
-        cout << CYAN << "Contact Number (e.g., 03331234567) (" << (app.contactNumber.empty() ? "N/A" : app.contactNumber) << "): " << RESET;
-        getline(cin, userInput);
-        if (!userInput.empty())
-            app.contactNumber = userInput;
-        if (isNumber(app.contactNumber) && !app.contactNumber.empty())
-        {
-            cout << CHECK_MARK << " Contact number accepted." << endl;
-            break;
-        }
-        if (!app.contactNumber.empty())
-            cout << CROSS_MARK << BOLD_RED << " Invalid input! Must be numeric." << RESET << endl;
-        else
-            cout << BOLD_YELLOW << "Field required." << RESET << endl;
+    cout << CYAN << "Contact Number (11 digits) (" << (app.contactNumber.empty() ? "N/A" : app.contactNumber) << "): " << RESET;
+    getline(cin, userInput);
+
+    if (!userInput.empty())
+        app.contactNumber = userInput;
+
+    if (isPhoneNumber(app.contactNumber))
+    {
+        cout << CHECK_MARK << " Contact number validated." << endl;
+        break;
+    }
+    if (userInput.empty()){
+        cout << BOLD_YELLOW << "Field required." << RESET << endl;
     }
 
+    cout << BOLD_RED << "Invalid phone number! Must be exactly 11 digits.\n" << RESET;
+    }
+
+
+    // email address with validationn
+     while (true)
+    {
     cout << CYAN << "Email Address (" << (app.emailAddress.empty() ? "N/A" : app.emailAddress) << "): " << RESET;
     getline(cin, userInput);
-    if (!userInput.empty())
-        app.emailAddress = userInput;
 
-    // CNIC Number (13-digit Validation)
+    if (!userInput.empty()){
+        app.emailAddress = userInput;
+    }
+
+    if (!app.emailAddress.empty() && isValidEmail(app.emailAddress)){
+        break; 
+    }
+
+    if (userInput.empty()){
+        cout << BOLD_YELLOW << "Field required." << RESET << endl;
+    }
+
+    cout << BOLD_RED << "Invalid email! Must end with @gmail.com, @outlook.com, etc.\n" << RESET;
+    }
+
+
+    // CNIC Number with 13 digit validation
     while (true)
     {
         cout << CYAN << "CNIC Number (13 digits, no dashes) (" << (app.cnicNumber.empty() ? "N/A" : app.cnicNumber) << "): " << RESET;
@@ -1077,7 +1161,7 @@ string collect_personal_info(LoanApplication &app)
             cout << BOLD_YELLOW << "Field required." << RESET << endl;
     }
 
-    // CNIC Expiry Date (Validation)
+    // CNIC exp date with validation
     while (true)
     {
         cout << CYAN << "CNIC Expiry Date (DD-MM-YYYY) (" << (app.cnicExpiryDate.empty() ? "N/A" : app.cnicExpiryDate) << "): " << RESET;
@@ -1095,7 +1179,7 @@ string collect_personal_info(LoanApplication &app)
             cout << BOLD_YELLOW << "Field required." << RESET << endl;
     }
 
-    // Employment Status (MENU SELECTION)
+    // Employment Status
     string empOptions = "1. Self-employed\n2. Salaried\n3. Retired\n4. Unemployed";
     while (true)
     {
@@ -1140,7 +1224,7 @@ string collect_personal_info(LoanApplication &app)
     }
     cout << CHECK_MARK << " Employment status recorded: " << app.employmentStatus << endl;
 
-    // Marital Status (MENU SELECTION)
+    // Marital Status
     string maritalOptions = "1. Single\n2. Married\n3. Divorced\n4. Widowed";
     while (true)
     {
@@ -1185,7 +1269,7 @@ string collect_personal_info(LoanApplication &app)
     }
     cout << CHECK_MARK << " Marital status recorded: " << app.maritalStatus << endl;
 
-    // Gender (MENU SELECTION)
+    // Gender
     string genderOptions = "1. Male\n2. Female\n3. Other";
     while (true)
     {
